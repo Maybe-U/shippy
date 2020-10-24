@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
-	"golang.org/x/net/context"
 	pb "github.com/EwanValentine/shippy/consignment-service/proto/consignment"
 	vesselProto "github.com/EwanValentine/shippy/vessel-service/proto/vessel"
+	"golang.org/x/net/context"
 	"gopkg.in/mgo.v2"
+	"log"
 )
 
 // Service should implement all of the methods to satisfy the service
@@ -13,7 +13,7 @@ import (
 // in the generated code itself for the exact method signatures etc
 // to give you a better idea.
 type service struct {
-	session *mgo.Session
+	session      *mgo.Session
 	vesselClient vesselProto.VesselServiceClient
 }
 
@@ -31,12 +31,13 @@ func (s *service) CreateConsignment(ctx context.Context, req *pb.Consignment, re
 	// and the amount of containers as the capacity value
 	vesselResponse, err := s.vesselClient.FindAvailable(context.Background(), &vesselProto.Specification{
 		MaxWeight: req.Weight,
-		Capacity: int32(len(req.Containers)),
+		Capacity:  int32(len(req.Containers)),
 	})
-	log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
+	log.Println(req)
 	if err != nil {
 		return err
 	}
+	log.Printf("Found vessel: %s \n", vesselResponse.Vessel.Name)
 
 	// We set the VesselId as the vessel we got back from our
 	// vessel service
